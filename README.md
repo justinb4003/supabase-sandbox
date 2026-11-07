@@ -25,3 +25,14 @@ Gotcha: Dart's `.order()` defaults to **descending**; JS defaults to ascending.
 
 ## "Service account"
 `.env.local` holds `BOT_EMAIL`/`BOT_PASSWORD` for a confirmed user created with the admin API, and `SUPABASE_SECRET_KEY` (bypasses RLS entirely; server-side only, never in the app or git).
+
+## Access model (mirrors ARMS)
+ARMS grants the logged-out `anon` role SELECT on ~213/233 tables and relies on RLS for rows. Three tiers, reproduced here:
+
+| Tier | anon grant? | anon RLS policy? | anon result | Sandbox | ARMS example |
+|------|-------------|------------------|-------------|---------|--------------|
+| 1 Public | yes | yes (`using true`) | rows | `teams` | `tm_teams`, `tm_seasons` |
+| 2 Exposed, RLS-empty | yes | no | `[]` (200) | `members` | `tm_persons`, `tm_compliance_records` |
+| 3 Ungranted | no | — | denied (401) | `audit_log` | `users`, `v_user_permissions` |
+
+Tier 2 is the one to watch: anon can *reach* the table, so a single missing/wrong RLS policy leaks it. Not granting `anon` at all (tier 3) is the defensive default.
