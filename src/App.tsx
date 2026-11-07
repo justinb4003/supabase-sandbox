@@ -91,7 +91,12 @@ function Auth({ session }: { session: Session | null }) {
 
   async function go(signUp: boolean) {
     const { error } = signUp
-      ? await supabase.auth.signUp({ email, password })
+      ? await supabase.auth.signUp({
+          email,
+          password,
+          // Confirmation link returns here; must be in Auth → URL Configuration.
+          options: { emailRedirectTo: window.location.origin + import.meta.env.BASE_URL },
+        })
       : await supabase.auth.signInWithPassword({ email, password })
     setMsg(error ? error.message : signUp ? 'Check your email to confirm.' : '')
   }
