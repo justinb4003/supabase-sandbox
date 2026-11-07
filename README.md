@@ -18,3 +18,10 @@ curl "$VITE_SUPABASE_URL/rest/v1/teams?select=*" "${H[@]}"
 curl "$VITE_SUPABASE_URL/rest/v1/members?select=first_name,teams(number)" "${H[@]}"   # [] when anonymous (RLS)
 curl -X POST "$VITE_SUPABASE_URL/rest/v1/rpc/get_team_roster" "${H[@]}" -H 'Content-Type: application/json' -d '{"team_number":4003}'
 ```
+
+## Dart (how the scouting app would call it)
+`cd dart && dart pub get && dart run bin/main.dart`. Uses `package:supabase` (Flutter apps use `supabase_flutter`, same API).
+Gotcha: Dart's `.order()` defaults to **descending**; JS defaults to ascending.
+
+## "Service account"
+`.env.local` holds `BOT_EMAIL`/`BOT_PASSWORD` for a confirmed user created with the admin API, and `SUPABASE_SECRET_KEY` (bypasses RLS entirely; server-side only, never in the app or git).

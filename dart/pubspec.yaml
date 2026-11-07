@@ -1,0 +1,7 @@
+name: sandbox_dart
+description: Pull data from the sandbox the way the scouting app would.
+publish_to: none
+environment:
+  sdk: ^3.5.0
+dependencies:
+  supabase: ^2.0.0
