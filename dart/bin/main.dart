@@ -19,7 +19,7 @@ Future<void> main() async {
       .from('members')
       .select('first_name, last_name, role, teams!inner(number)')
       .eq('teams.number', 4003)
-      .order('last_name', ascending: true) // Dart defaults to descending!;
+      .order('last_name', ascending: true); // Dart defaults to descending!
   for (final m in members) {
     print('  ${m['first_name']} ${m['last_name']} (${m['role']})');
   }
